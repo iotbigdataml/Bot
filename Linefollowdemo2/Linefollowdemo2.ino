@@ -42,12 +42,12 @@
 #define RightQTIPin A2    // Right IR sensor pin
 #define ServoStop 90      // PWM value to stop the servos
 //----------------- Parallax Servos---------------------------------------
-#define CWSFull 70         // PWM value for clockwise servo motion - High Speed 
-#define CCWSFull 110      // PWM value for counter clockwise servo motion - High Speed 
-#define CWSMid 85         // PWM value for clockwise servo motion - Mid Speed
-#define CCWSMid 95      // PWM value for counter clockwise servo motion - Mid Speed
-#define CWSSlow 89        // PWM value for clockwise servo motion - Slow Speed
-#define CCWSSlow 91       // PWM value for counter clockwise servo motion - Slow Speed
+#define CWSFull 0         // PWM value for clockwise servo motion - High Speed 
+#define CCWSFull 180      // PWM value for counter clockwise servo motion - High Speed 
+#define CWSMid 35         // PWM value for clockwise servo motion - Mid Speed
+#define CCWSMid 145      // PWM value for counter clockwise servo motion - Mid Speed
+#define CWSSlow 82       // PWM value for clockwise servo motion - Slow Speed
+#define CCWSSlow 98       // PWM value for counter clockwise servo motion - Slow Speed
 
 #define RWOffSet  0       // Right and left servo velocity offsets. Compensates for 
 #define LWOffSet  0       // differences in servos velocities that can't be fixed in calibration.
