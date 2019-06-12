@@ -57,9 +57,9 @@
                           // for each bot based on tests performed with the QTI tests. Any values less
                           // than Threshold will be considered white. Above Threshold, black.
 
-#define Cthreshold 110  
-#define Rthreshold 125  
-#define Lthreshold 100  
+#define Cthreshold 50  
+#define Rthreshold 50  
+#define Lthreshold 50  
 
 // Parameters
 
@@ -358,7 +358,7 @@ long ReadQTI(int sensorIn)
 ****************************************************************/
 boolean Obstacle( int pin )
 {
-  if (ReadSonarInches(SonarPin) <= 2 )
+  if (ReadSonarInches(SonarPin) <= 4 )
   {
     Serial.println(true);
     return( true );

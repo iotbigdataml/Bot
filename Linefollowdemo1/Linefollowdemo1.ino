@@ -43,9 +43,11 @@
 #define ServoStop 90      // PWM value to stop the servos
 //----------------- Parallax Servos---------------------------------------
 #define CWSFull 70         // PWM value for clockwise servo motion - High Speed 
-#define CCWSFull 110      // PWM value for counter clockwise servo motion - High Speed 
 #define CWSMid 85         // PWM value for clockwise servo motion - Mid Speed
-#define CCWSMid 95      // PWM value for counter clockwise servo motion - Mid Speed
+#define CWSFull 75         // PWM value for clockwise servo motion - High Speed 
+#define CCWSFull 105      // PWM value for counter clockwise servo motion - High Speed 
+#define CWSMid 83         // PWM value for clockwise servo motion - Mid Speed
+#define CCWSMid 97      // PWM value for counter clockwise servo motion - Mid Speed
 #define CWSSlow 89        // PWM value for clockwise servo motion - Slow Speed
 #define CCWSSlow 91       // PWM value for counter clockwise servo motion - Slow Speed
 
@@ -358,7 +360,7 @@ long ReadQTI(int sensorIn)
 ****************************************************************/
 boolean Obstacle( int pin )
 {
-  if (ReadSonarInches(SonarPin) <= 2 )
+  if (ReadSonarInches(SonarPin) <= 4 )
   {
     Serial.println(true);
     return( true );
