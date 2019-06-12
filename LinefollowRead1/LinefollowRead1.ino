@@ -186,35 +186,35 @@ void loop()
         delay(3000);
       }
     }
-   while(stopflag==1)
-   {
-    if (radio.available())              // If we have messages, we print them out - otherwise we do nothing but listen.
-    {
-      char text[32] = "";
-      radio.read(&text, sizeof(text));
-      Serial.println("2");
-      Serial.print(text);
-      if(!strcmp(text,"m"))
-      {
-        Serial.println("3");
-        Serial.print(text);
-        leftservo.write(servoHalt);
-        rightservo.write(servoHalt);
-        delay(3000);
-        stopflag=1;
-      }
-      else if(!strcmp(text,"q"))
-      {
-        Serial.println("4");
-        Serial.print(text);
-        leftservo.write(CCWSMid+LWOffSet); 
-         rightservo.write(CWSMid+LWOffSet);
-         delay(1000);
-         stopflag=0;
-      }
-
-    }
-   }
+//   while(stopflag==1 )
+//   {
+//    if (radio.available())              // If we have messages, we print them out - otherwise we do nothing but listen.
+//    {
+//      char text[32] = "";
+//      radio.read(&text, sizeof(text));
+//      Serial.println("2");
+//      Serial.print(text);
+//      if(!strcmp(text,"m"))
+//      {
+//        Serial.println("3");
+//        Serial.print(text);
+//        leftservo.write(servoHalt);
+//        rightservo.write(servoHalt);
+//        delay(3000);
+//        stopflag=1;
+//      }
+//      else if(!strcmp(text,"q"))
+//      {
+//        Serial.println("4");
+//        Serial.print(text);
+//        leftservo.write(CCWSMid+LWOffSet); 
+//         rightservo.write(CWSMid+LWOffSet);
+//         delay(1000);
+//         stopflag=0;
+//      }
+//
+//    }
+//   }
     if (Obstacle(SonarPin)){
       // Some obstacle is in front of the robot (within 2 inches)
       Serial.print("Obstacle!");
@@ -261,23 +261,24 @@ void loop()
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);      
 //      delay(3000);
-//      while(!radio.available())
-//      {
-//        delay(1000);
-//      }
-//        char text1[32] = "";
-//        radio.read(&text1, sizeof(text1));
-//        if(!strcmp(text1,"m"))
-//        {
-//          leftservo.write(servoHalt);
-//          rightservo.write(servoHalt);
-//          delay(3000);
-//        }
-//        else if(!strcmp(text1,"q"))
-//        {
-//          leftservo.write(CCWSMid+LWOffSet); 
-//          rightservo.write(CWSMid+RWOffSet);
-//        }
+      while(!radio.available())
+      {
+        delay(1000);
+      }
+        char text1[32] = "";
+        radio.read(&text1, sizeof(text1));
+        if(!strcmp(text1,"m"))
+        {
+          leftservo.write(servoHalt);
+          rightservo.write(servoHalt);
+          delay(3000);
+        }
+        else if(!strcmp(text1,"q"))
+        {
+          leftservo.write(CCWSMid+LWOffSet); 
+          rightservo.write(CWSMid+RWOffSet);
+                delay(1000);
+        }
 //      delay(1000);
       shiprec=0;
       stopflag=1;
@@ -300,25 +301,24 @@ void loop()
 //      radio.write(&receiving,sizeof(receiving));
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);
-      stopflag=1;
 //      delay(3000);
-//      while(!radio.available())
-//      {
-//        delay(1000);
-//      }
-//        char text2[32] = "";
-//        radio.read(&text2, sizeof(text2));
-//        if(!strcmp(text2,"m"))
-//        {
-//          leftservo.write(servoHalt);
-//          rightservo.write(servoHalt);
-//          delay(3000);
-//        }
-//        else if(!strcmp(text2,"q"))
-//        {
-//          leftservo.write(CCWSMid+LWOffSet); 
-//          rightservo.write(CWSMid+LWOffSet);
-//        }
+      while(!radio.available())
+      {
+        delay(1000);
+      }
+        char text2[32] = "";
+        radio.read(&text2, sizeof(text2));
+        if(!strcmp(text2,"m"))
+        {
+          leftservo.write(servoHalt);
+          rightservo.write(servoHalt);
+          delay(3000);
+        }
+        else if(!strcmp(text2,"q"))
+        {
+          leftservo.write(CCWSMid+LWOffSet); 
+          rightservo.write(CWSMid+LWOffSet);
+        }
 //      delay(1000);
       stopflag=1;
       shiprec=2;

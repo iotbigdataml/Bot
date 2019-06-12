@@ -136,41 +136,6 @@ void loop()
     centerQti = ReadQTI(CenterQTIPin);
     rightQti = ReadQTI(RightQTIPin);
 
-//    itoa(leftQti, lqt, 10);
-//    itoa(centerQti, cqt, 10);
-//    itoa(rightQti, rqt, 10);
-//    itoa(flag,flagg,10);
-//    radio.write(&flagg,sizeof(flagg));
-
-
-    
-    // These are debug messages - obviously not printed when untethered
-//    Serial.print("Left QTI: ");
-//    Serial.print(leftQti);      // Displays results of left QTI
-//    Serial.print("  Center QTI: ");
-//    Serial.print(centerQti);    // Displays results of center QTI
-//    Serial.print("  Right QTI: ");  
-//    Serial.println(rightQti);   // Displays results of right QTI
-//
-//    //Write it to the radio station 
-//    strcpy(msg,text1);
-//    strcat(msg,colon1);
-//    strcat(msg,lqt);
-//    strcat(msg,colon2);
-//    strcat(msg,text2);
-//    strcat(msg,colon1);
-//    strcat(msg,cqt);
-//    strcat(msg,colon2);
-//    strcat(msg,text3);
-//    strcat(msg,colon1);
-//    strcat(msg,rqt);    
-//    radio.write(&text1, sizeof(text1));
-//    radio.write(&lqt,sizeof(lqt));
-//    radio.write(&text2, sizeof(text2));
-//    radio.write(&cqt,sizeof(cqt));
-//    radio.write(&text3, sizeof(text3));
-//    radio.write(&rqt,sizeof(rqt));
-
     // In this section we check the values of the Sonar and the QTI pins
     // and figure out what to do.
     if (radio.available())              // If we have messages, we print them out - otherwise we do nothing but listen.
@@ -186,35 +151,35 @@ void loop()
         delay(3000);
       }
     }
-   while(stopflag==1)
-   {
-    if (radio.available())              // If we have messages, we print them out - otherwise we do nothing but listen.
-    {
-      char text[32] = "";
-      radio.read(&text, sizeof(text));
-      Serial.println("2");
-      Serial.print(text);
-      if(!strcmp(text,"m"))
-      {
-        Serial.println("3");
-        Serial.print(text);
-        leftservo.write(servoHalt);
-        rightservo.write(servoHalt);
-        delay(3000);
-        stopflag=1;
-      }
-      else if(!strcmp(text,"p"))
-      {
-        Serial.println("4");
-        Serial.print(text);
-        leftservo.write(CCWSMid+LWOffSet); 
-         rightservo.write(CWSMid+LWOffSet);
-         delay(1000);
-         stopflag=0;
-      }
-
-    }
-   } if (Obstacle(SonarPin)){
+//   while(stopflag==1)
+//   {
+//    if (radio.available())              // If we have messages, we print them out - otherwise we do nothing but listen.
+//    {
+//      char text[32] = "";
+//      radio.read(&text, sizeof(text));
+//      Serial.println("2");
+//      Serial.print(text);
+//      if(!strcmp(text,"m"))
+//      {
+//        Serial.println("3");
+//        Serial.print(text);
+//        leftservo.write(servoHalt);
+//        rightservo.write(servoHalt);
+//        delay(3000);
+//        stopflag=1;
+//      }
+//      else if(!strcmp(text,"p"))
+//      {
+//        Serial.println("4");
+//        Serial.print(text);
+//        leftservo.write(CCWSMid+LWOffSet); 
+//         rightservo.write(CWSMid+LWOffSet);
+//         delay(1000);
+//         stopflag=0;
+//      }
+//
+//    }
+if (Obstacle(SonarPin)){
       // Some obstacle is in front of the robot (within 2 inches)
       Serial.print("Obstacle!");
       leftservo.write(ServoStop); 
@@ -260,23 +225,23 @@ void loop()
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);      
 //      delay(3000);
-//      while(!radio.available())
-//      {
-//        //do nothing
-//      }
-//        char text1[32] = "";
-//        radio.read(&text1, sizeof(text1));
-//        if(!strcmp(text1,"m"))
-//        {
-//          leftservo.write(servoHalt);
-//          rightservo.write(servoHalt);
-//          delay(3000);
-//        }
-//        else if(!strcmp(text1,"p"))
-//        {
-//          leftservo.write(CCWSMid+LWOffSet); 
-//          rightservo.write(CWSMid+RWOffSet);
-//        }
+      while(!radio.available())
+      {
+        delay(1000);
+      }
+        char text1[32] = "";
+        radio.read(&text1, sizeof(text1));
+        if(!strcmp(text1,"m"))
+        {
+          leftservo.write(servoHalt);
+          rightservo.write(servoHalt);
+          delay(3000);
+        }
+        else if(!strcmp(text1,"p"))
+        {
+          leftservo.write(CCWSMid+LWOffSet); 
+          rightservo.write(CWSMid+RWOffSet);
+        }
 //      delay(1000);
       stopflag=1;
       shiprec=0;
@@ -300,24 +265,25 @@ void loop()
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);
 //      delay(3000);
-//      while(!radio.available())
-//      {
-//        //do nothing
-//      }
-//        char text2[32] = "";
-//        radio.read(&text2, sizeof(text2));
-//        if(!strcmp(text2,"m"))
-//        {
-//          leftservo.write(servoHalt);
-//          rightservo.write(servoHalt);
-//          delay(3000);
-//        }
-//        else if(!strcmp(text2,"p"))
-//        {
-//          leftservo.write(CCWSMid+LWOffSet); 
-//          rightservo.write(CWSMid+LWOffSet);
-//        }
-//      delay(1000);
+      while(!radio.available())
+      {
+        delay(1000);
+      }
+        char text2[32] = "";
+        radio.read(&text2, sizeof(text2));
+        if(!strcmp(text2,"m"))
+        {
+          leftservo.write(servoHalt);
+          rightservo.write(servoHalt);
+          delay(3000);
+        }
+        else if(!strcmp(text2,"p"))
+        {
+          leftservo.write(CCWSMid+LWOffSet); 
+          rightservo.write(CWSMid+LWOffSet);
+                delay(1000);
+        }
+
       stopflag=1;
       shiprec=2;
 //          radio.write(&msg,sizeof(msg));
