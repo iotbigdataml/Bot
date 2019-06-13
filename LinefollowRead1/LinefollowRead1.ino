@@ -80,6 +80,7 @@ const byte address[6] = "01011";  // Radio address - use only the channels that 
 static int flag;
 static int shiprec;
 static int stopflag;
+static int initialflag; 
 const char text1[] = "L";
 const char text2[] = "C";
 const char text3[] = "R";
@@ -254,7 +255,7 @@ void loop()
 //          radio.write(&msg,sizeof(msg));
 
           
-    } else if ((leftQti>Lthreshold) && (centerQti>Cthreshold) && (rightQti>Rthreshold) && shiprec==2) {
+    } else if ((leftQti>Lthreshold) && (centerQti>Cthreshold) && (rightQti>Rthreshold) && (shiprec==2 || initialflag==0)) {
       // At shipping
       Serial.println( "shipping" ); 
 //      radio.write(&shipping,sizeof(shipping));
@@ -282,7 +283,7 @@ void loop()
 //      delay(1000);
       shiprec=0;
       stopflag=1;
-//          radio.write(&msg,sizeof(msg));
+      initialflag=1;
 
           
     } else if ((leftQti>Lthreshold) && (centerQti>Cthreshold) && (rightQti>Rthreshold) && shiprec!=2) {
@@ -291,8 +292,6 @@ void loop()
       leftservo.write(CCWSFull+LWOffSet); 
       rightservo.write(CWSFull+RWOffSet);
       Serial.println( "centered" );
-//      radio.write(&centered,sizeof(centered));
-//          radio.write(&msg,sizeof(msg));
 
           
     }else if ((leftQti>Lthreshold) && (centerQti<Cthreshold) && (rightQti>Rthreshold) &&shiprec==0) {
@@ -301,7 +300,7 @@ void loop()
 //      radio.write(&receiving,sizeof(receiving));
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);
-//      delay(3000);
+      
       while(!radio.available())
       {
         delay(1000);
@@ -319,7 +318,7 @@ void loop()
           leftservo.write(CCWSMid+LWOffSet); 
           rightservo.write(CWSMid+LWOffSet);
         }
-//      delay(1000);
+      delay(1000);
       stopflag=1;
       shiprec=2;
 //          radio.write(&msg,sizeof(msg));

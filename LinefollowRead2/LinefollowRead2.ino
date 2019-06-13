@@ -44,8 +44,8 @@
 //----------------- Parallax Servos---------------------------------------
 #define CWSFull 0         // PWM value for clockwise servo motion - High Speed 
 #define CCWSFull 180      // PWM value for counter clockwise servo motion - High Speed 
-#define CWSMid 35         // PWM value for clockwise servo motion - Mid Speed
-#define CCWSMid 145      // PWM value for counter clockwise servo motion - Mid Speed
+#define CWSMid 30         // PWM value for clockwise servo motion - Mid Speed
+#define CCWSMid 150      // PWM value for counter clockwise servo motion - Mid Speed
 #define CWSSlow 82       // PWM value for clockwise servo motion - Slow Speed
 #define CCWSSlow 98       // PWM value for counter clockwise servo motion - Slow Speed
 
@@ -57,9 +57,9 @@
                           // for each bot based on tests performed with the QTI tests. Any values less
                           // than Threshold will be considered white. Above Threshold, black.
 
-#define Cthreshold 50  
-#define Rthreshold 50  
-#define Lthreshold 50  
+#define Cthreshold 70  
+#define Rthreshold 70  
+#define Lthreshold 40  
 #define servoHalt 90
 
 // Parameters
@@ -80,6 +80,7 @@ const byte address[6] = "01100";  // Radio address - use only the channels that 
 static int flag;
 static int shiprec;
 static int stopflag;
+static int initialflag;
 const char text1[] = "L";
 const char text2[] = "C";
 const char text3[] = "R";
@@ -218,7 +219,7 @@ if (Obstacle(SonarPin)){
 //          radio.write(&msg,sizeof(msg));
 
           
-    } else if ((leftQti>Lthreshold) && (centerQti>Cthreshold) && (rightQti>Rthreshold) && shiprec==2) {
+    } else if ((leftQti>Lthreshold) && (centerQti>Cthreshold) && (rightQti>Rthreshold) && (shiprec==2 || initialflag==0)) {
       // At shipping
       Serial.println( "shipping" ); 
 //      radio.write(&shipping,sizeof(shipping));
@@ -245,6 +246,7 @@ if (Obstacle(SonarPin)){
 //      delay(1000);
       stopflag=1;
       shiprec=0;
+      initialflag=1;
 //          radio.write(&msg,sizeof(msg));
 
           
@@ -267,7 +269,7 @@ if (Obstacle(SonarPin)){
 //      delay(3000);
       while(!radio.available())
       {
-        delay(1000);
+        //do nothing 
       }
         char text2[32] = "";
         radio.read(&text2, sizeof(text2));
@@ -281,7 +283,7 @@ if (Obstacle(SonarPin)){
         {
           leftservo.write(CCWSMid+LWOffSet); 
           rightservo.write(CWSMid+LWOffSet);
-                delay(1000);
+          delay(1000);
         }
 
       stopflag=1;
