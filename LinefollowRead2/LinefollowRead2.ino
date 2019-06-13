@@ -152,34 +152,7 @@ void loop()
         delay(3000);
       }
     }
-//   while(stopflag==1)
-//   {
-//    if (radio.available())              // If we have messages, we print them out - otherwise we do nothing but listen.
-//    {
-//      char text[32] = "";
-//      radio.read(&text, sizeof(text));
-//      Serial.println("2");
-//      Serial.print(text);
-//      if(!strcmp(text,"m"))
-//      {
-//        Serial.println("3");
-//        Serial.print(text);
-//        leftservo.write(servoHalt);
-//        rightservo.write(servoHalt);
-//        delay(3000);
-//        stopflag=1;
-//      }
-//      else if(!strcmp(text,"p"))
-//      {
-//        Serial.println("4");
-//        Serial.print(text);
-//        leftservo.write(CCWSMid+LWOffSet); 
-//         rightservo.write(CWSMid+LWOffSet);
-//         delay(1000);
-//         stopflag=0;
-//      }
-//
-//    }
+
 if (Obstacle(SonarPin)){
       // Some obstacle is in front of the robot (within 2 inches)
       Serial.print("Obstacle!");
@@ -242,12 +215,11 @@ if (Obstacle(SonarPin)){
         {
           leftservo.write(CCWSMid+LWOffSet); 
           rightservo.write(CWSMid+RWOffSet);
+          delay(1000);
         }
-//      delay(1000);
       stopflag=1;
       shiprec=0;
       initialflag=1;
-//          radio.write(&msg,sizeof(msg));
 
           
     } else if ((leftQti>Lthreshold) && (centerQti>Cthreshold) && (rightQti>Rthreshold) && shiprec!=2) {

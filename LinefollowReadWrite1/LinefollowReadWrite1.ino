@@ -1,33 +1,4 @@
 
-/****************************************************************
-* File: LineFollowDemo
-* Project: IoT Course
-* Copyright: Copyright (c) 2018 Anthony J. Lattanze
-* 1.0 April 2018 - Initial version
-*
-* Description:
-*
-* This program runs on the IoT bots with two continous servos, a
-* Ping))) sonar, and 3 QTI Ir sensors. 
-*
-* Compilation and Execution Instructions: Compile using
-* Arduino IDE.
-*
-* Parameters: None
-*
-* Internal Methods:
-* long ReadQTI(int pin) - Reads the IR sensor, returns a value
-*                        between 0 that indicated the lightness or
-*                        darkness under the IR sensor (0=white)
-* long ReadSonarInches (int pin) - Reads the sonar and returns 
-*                                  a value indicating the distanc
-*                                  of an object infront of the 
-*                                  robot.
-* boolean Obstacle(int pin) - Returns true if there is an obstacle 
-*                             2" or less in front of the robot. 
-*                             Otherwise, it returns false.
-*****************************************************************/
-
 #include <Servo.h> 
 #include <SPI.h>
 #include <nRF24L01.h>
@@ -121,6 +92,7 @@ void setup()
       while(!radio.isChipConnected());
   }
 
+  radio.openWritingPipe(address);
    radio.openReadingPipe(0, address);  // Open the radio pipe using your address (read about pipes and channels)
   radio.setPALevel(RF24_PA_MIN);      // Set the power level. Since the bots and the radio base station are close I use min power
   radio.startListening();             // Go into receive mode.
@@ -137,40 +109,24 @@ void loop()
     centerQti = ReadQTI(CenterQTIPin);
     rightQti = ReadQTI(RightQTIPin);
 
-//    itoa(leftQti, lqt, 10);
-//    itoa(centerQti, cqt, 10);
-//    itoa(rightQti, rqt, 10);
+    itoa(leftQti, lqt, 10);
+    itoa(centerQti, cqt, 10);
+    itoa(rightQti, rqt, 10);
 //    itoa(flag,flagg,10);
 //    radio.write(&flagg,sizeof(flagg));
-
-
-    
-    // These are debug messages - obviously not printed when untethered
-//    Serial.print("Left QTI: ");
-//    Serial.print(leftQti);      // Displays results of left QTI
-//    Serial.print("  Center QTI: ");
-//    Serial.print(centerQti);    // Displays results of center QTI
-//    Serial.print("  Right QTI: ");  
-//    Serial.println(rightQti);   // Displays results of right QTI
 //
-//    //Write it to the radio station 
-//    strcpy(msg,text1);
-//    strcat(msg,colon1);
-//    strcat(msg,lqt);
-//    strcat(msg,colon2);
-//    strcat(msg,text2);
-//    strcat(msg,colon1);
-//    strcat(msg,cqt);
-//    strcat(msg,colon2);
-//    strcat(msg,text3);
-//    strcat(msg,colon1);
-//    strcat(msg,rqt);    
-//    radio.write(&text1, sizeof(text1));
-//    radio.write(&lqt,sizeof(lqt));
-//    radio.write(&text2, sizeof(text2));
-//    radio.write(&cqt,sizeof(cqt));
-//    radio.write(&text3, sizeof(text3));
-//    radio.write(&rqt,sizeof(rqt));
+//  Write it to the radio station 
+    strcpy(msg,text1);
+    strcat(msg,colon1);
+    strcat(msg,lqt);
+    strcat(msg,colon2);
+    strcat(msg,text2);
+    strcat(msg,colon1);
+    strcat(msg,cqt);
+    strcat(msg,colon2);
+    strcat(msg,text3);
+    strcat(msg,colon1);
+    strcat(msg,rqt);    
 
     // In this section we check the values of the Sonar and the QTI pins
     // and figure out what to do.
@@ -187,51 +143,24 @@ void loop()
         delay(3000);
       }
     }
-//   while(stopflag==1 )
-//   {
-//    if (radio.available())              // If we have messages, we print them out - otherwise we do nothing but listen.
-//    {
-//      char text[32] = "";
-//      radio.read(&text, sizeof(text));
-//      Serial.println("2");
-//      Serial.print(text);
-//      if(!strcmp(text,"m"))
-//      {
-//        Serial.println("3");
-//        Serial.print(text);
-//        leftservo.write(servoHalt);
-//        rightservo.write(servoHalt);
-//        delay(3000);
-//        stopflag=1;
-//      }
-//      else if(!strcmp(text,"q"))
-//      {
-//        Serial.println("4");
-//        Serial.print(text);
-//        leftservo.write(CCWSMid+LWOffSet); 
-//         rightservo.write(CWSMid+LWOffSet);
-//         delay(1000);
-//         stopflag=0;
-//      }
-//
-//    }
-//   }
     if (Obstacle(SonarPin)){
       // Some obstacle is in front of the robot (within 2 inches)
       Serial.print("Obstacle!");
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);
 //      radio.write(&obstacle,sizeof(obstacle));
-//      radio.write(&msg,sizeof(msg));  
+        radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
 
       
     } else if ((leftQti <Lthreshold) && (centerQti>Cthreshold) && (rightQti<Rthreshold)) {
       // centered on the line
       leftservo.write(CCWSFull+LWOffSet); 
       rightservo.write(CWSFull+RWOffSet);
-//      Serial.println( "centered" );
-//      radio.write(&centered,sizeof(centered));
-//      radio.write(&msg,sizeof(msg));
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
 
       
     } else  if ((leftQti>Lthreshold) && (centerQti<Cthreshold) && (rightQti<Rthreshold)) {
@@ -239,9 +168,10 @@ void loop()
       leftservo.write(CCWSSlow); 
       rightservo.write(CWSMid);
       Serial.println( "jog left" );
-//      radio.write(&jogleft,sizeof(jogleft));
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
       flag=1;
-//    radio.write(&msg,sizeof(msg));
 
     
     } else if ((leftQti<Lthreshold) && (centerQti<Cthreshold) && (rightQti>Rthreshold)) {
@@ -250,24 +180,26 @@ void loop()
       leftservo.write(CCWSMid); 
       rightservo.write(CWSSlow);
       Serial.println( "jog right" );      
-//      radio.write(&jogright,sizeof(jogright));
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();      
       flag=2;
-//          radio.write(&msg,sizeof(msg));
 
           
     } else if ((leftQti>Lthreshold) && (centerQti>Cthreshold) && (rightQti>Rthreshold) && (shiprec==2 || initialflag==0)) {
       // At shipping
       Serial.println( "shipping" ); 
-//      radio.write(&shipping,sizeof(shipping));
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);      
-//      delay(3000);
       while(!radio.available())
       {
         delay(1000);
       }
         char text1[32] = "";
         radio.read(&text1, sizeof(text1));
+        radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
         if(!strcmp(text1,"m"))
         {
           leftservo.write(servoHalt);
@@ -280,7 +212,6 @@ void loop()
           rightservo.write(CWSMid+RWOffSet);
                 delay(1000);
         }
-//      delay(1000);
       shiprec=0;
       stopflag=1;
       initialflag=1;
@@ -292,12 +223,14 @@ void loop()
       leftservo.write(CCWSFull+LWOffSet); 
       rightservo.write(CWSFull+RWOffSet);
       Serial.println( "centered" );
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
 
           
     }else if ((leftQti>Lthreshold) && (centerQti<Cthreshold) && (rightQti>Rthreshold) &&shiprec==0) {
       // At receiving
       Serial.println( "receiving" ); 
-//      radio.write(&receiving,sizeof(receiving));
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);
       
@@ -307,6 +240,9 @@ void loop()
       }
         char text2[32] = "";
         radio.read(&text2, sizeof(text2));
+        radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
         if(!strcmp(text2,"m"))
         {
           leftservo.write(servoHalt);
@@ -332,8 +268,10 @@ void loop()
       leftservo.write(CCWSSlow); 
       rightservo.write(CWSMid);
       Serial.println( "jog left" );
-//      radio.write(&jogleft1,sizeof(jogleft1));
-//      radio.write(&msg,sizeof(msg)); 
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
+
 
       
       }
@@ -341,17 +279,19 @@ void loop()
       // Drifted left
       leftservo.write(CCWSMid); 
       rightservo.write(CWSSlow);
-      Serial.println( "jog right" );      
-//      radio.write(&jogright1,sizeof(jogright1)); 
-//          radio.write(&msg,sizeof(msg)); 
+      Serial.println( "jog right" );  
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();    
 
           
       }else if(flag==0){
       leftservo.write(CCWSFull+LWOffSet); 
       rightservo.write(CWSFull+RWOffSet);
       Serial.println( "centered" );
-//      radio.write(&centered1,sizeof(centered1));
-//          radio.write(&msg,sizeof(msg));
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
 
           
       }
@@ -361,19 +301,23 @@ void loop()
       leftservo.write(CCWSSlow); 
       rightservo.write(CWSMid);
       Serial.println( "jog left" );
-//      radio.write(&jogleft1,sizeof(jogleft1));
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();
+
       flag=2;
-//          radio.write(&msg,sizeof(msg));
 
           
     }else if((leftQti>Lthreshold) && (centerQti>Cthreshold) && (rightQti<Rthreshold)){
       // Drifted left
       leftservo.write(CCWSMid); 
       rightservo.write(CWSSlow);
-      Serial.println( "jog right" );      
-//      radio.write(&jogright1,sizeof(jogright1));
+      Serial.println( "jog right" );  
+      radio.stopListening();
+      radio.write(&msg,sizeof(msg));  
+      radio.startListening();    
+
       flag=1;
-//          radio.write(&msg,sizeof(msg));
 
           
     }
