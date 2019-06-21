@@ -1,20 +1,5 @@
 
 /****************************************************************
-* File: LineFollowDemo
-* Project: IoT Course
-* Copyright: Copyright (c) 2018 Anthony J. Lattanze
-* 1.0 April 2018 - Initial version
-*
-* Description:
-*
-* This program runs on the IoT bots with two continous servos, a
-* Ping))) sonar, and 3 QTI Ir sensors. 
-*
-* Compilation and Execution Instructions: Compile using
-* Arduino IDE.
-*
-* Parameters: None
-*
 * Internal Methods:
 * long ReadQTI(int pin) - Reads the IR sensor, returns a value
 *                        between 0 that indicated the lightness or
@@ -184,38 +169,17 @@ void loop()
         Serial.print(text);
         leftservo.write(servoHalt);
         rightservo.write(servoHalt);
-        delay(3000);
+        while(1)
+        {
+           char text[32] = "";
+           radio.read(&text, sizeof(text));
+           if(!strcmp(text,"n"))
+           {
+              break;
+           }
+         }
       }
     }
-//   while(stopflag==1 )
-//   {
-//    if (radio.available())              // If we have messages, we print them out - otherwise we do nothing but listen.
-//    {
-//      char text[32] = "";
-//      radio.read(&text, sizeof(text));
-//      Serial.println("2");
-//      Serial.print(text);
-//      if(!strcmp(text,"m"))
-//      {
-//        Serial.println("3");
-//        Serial.print(text);
-//        leftservo.write(servoHalt);
-//        rightservo.write(servoHalt);
-//        delay(3000);
-//        stopflag=1;
-//      }
-//      else if(!strcmp(text,"q"))
-//      {
-//        Serial.println("4");
-//        Serial.print(text);
-//        leftservo.write(CCWSMid+LWOffSet); 
-//         rightservo.write(CWSMid+LWOffSet);
-//         delay(1000);
-//         stopflag=0;
-//      }
-//
-//    }
-//   }
     if (Obstacle(SonarPin)){
       // Some obstacle is in front of the robot (within 2 inches)
       Serial.print("Obstacle!");
@@ -261,25 +225,33 @@ void loop()
 //      radio.write(&shipping,sizeof(shipping));
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);      
-//      delay(3000);
-      while(!radio.available())
+      delay(2000);
+      while(1)
       {
-        delay(1000);
-      }
         char text1[32] = "";
         radio.read(&text1, sizeof(text1));
         if(!strcmp(text1,"m"))
         {
           leftservo.write(servoHalt);
-          rightservo.write(servoHalt);
-          delay(3000);
+        rightservo.write(servoHalt);
+        while(1)
+        {
+           char text[32] = "";
+           radio.read(&text, sizeof(text));
+           if(!strcmp(text,"n"))
+           {
+              break;
+           }
+         }
         }
         else if(!strcmp(text1,"q"))
         {
           leftservo.write(CCWSMid+LWOffSet); 
           rightservo.write(CWSMid+RWOffSet);
                 delay(1000);
+          break;
         }
+      }
 //      delay(1000);
       shiprec=0;
       stopflag=1;
@@ -300,25 +272,36 @@ void loop()
 //      radio.write(&receiving,sizeof(receiving));
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);
+      delay(2000);
       
-      while(!radio.available())
+      
+      while(1)
       {
-        delay(1000);
-      }
+        
         char text2[32] = "";
         radio.read(&text2, sizeof(text2));
         if(!strcmp(text2,"m"))
         {
-          leftservo.write(servoHalt);
-          rightservo.write(servoHalt);
-          delay(3000);
+         leftservo.write(servoHalt);
+        rightservo.write(servoHalt);
+        while(1)
+        {
+           char text[32] = "";
+           radio.read(&text, sizeof(text));
+           if(!strcmp(text,"n"))
+           {
+              break;
+           }
+         }
         }
         else if(!strcmp(text2,"q"))
         {
           leftservo.write(CCWSMid+LWOffSet); 
           rightservo.write(CWSMid+LWOffSet);
           delay(1000);
+          break;
         }
+      }
       stopflag=1;
       shiprec=2;
 
