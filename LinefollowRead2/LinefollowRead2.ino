@@ -44,7 +44,7 @@
 
 #define Cthreshold 70  
 #define Rthreshold 70  
-#define Lthreshold 40  
+#define Lthreshold 50  
 #define servoHalt 90
 
 // Parameters
