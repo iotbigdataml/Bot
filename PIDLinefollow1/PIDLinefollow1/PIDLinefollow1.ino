@@ -60,7 +60,7 @@ const char colon2[]="\n";
 
 
 //---------------Constans for PID ------------------//
-#define KP 2 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
+#define KP 0.008 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
 #define KD 5 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
 #define KI 5 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Ki)
 
@@ -128,26 +128,57 @@ void loop() {
       rightservo.write(ServoStop);
       radio.write(&msg,sizeof(msg));  
 
+    }
 
-//
-//      unsigned int sensors[5];
-//      int position = qtrrc.readLine(sensors); //get calibrated readings along with the line position, refer to the QTR Sensors Arduino Library for more details on line position.
-//      int error = position - 2000;
+      int position = FindPosition(leftQti,centerQti,rightQti);
+      int error = position - 1000;
+      
+//      this is the D part of PID, we will do that later. 
 //      int motorSpeed = KP * error + KD * (error - lastError);
 //      lastError = error;
-//      
-//      int leftMotorSpeed = M1_minumum_speed + motorSpeed;
-//      int rightMotorSpeed = M2_minumum_speed - motorSpeed;
-//      
-//      // set motor speeds using the two motor speed variables above
-//      set_motors(leftMotorSpeed, rightMotorSpeed);
+
+      //The motorspeed 
+      int motorSpeed = KP * error ;
+
+      int leftMotorSpeed = CCWSSlow + motorSpeed;
+      int rightMotorSpeed = CWSSlow + motorSpeed;    
+       
+      //Set motor speeds using the two motor speed variables above
+      leftservo.write(leftMotorSpeed); 
+      rightservo.write(rightMotorSpeed);
+      
 }
 
 
+/****************************************************************
+* FindPosition (long leftQti, long centerQti, long rightQti)
+* 
+* Parameters:
+*              long leftQti - The left IR sensor reading .
+*              long centerQti - The center IR sensor reading .
+*              long rightQti - The right IR sensor reading .
 
+* Description:
+*  Combines the Qti sensor values to calculate the position of the
+*  w.r.t to the black line. If the value is close to 1000, it 
+*  implies that the bot is close to the line, if the value is
+*  closer to zero means that the bot is on the left side of the 
+*  line and if the value is close to 2000, then the bot is 
+*  on the right side of the line. 
+* Returns : It returns an integer value of the error. 
+****************************************************************/
+int FindPosition(long leftQti, long centerQti, long rightQti)
+{
 
-
-
+//This is inspired from the QTR sensor's package of linefollow demo
+// Please refer to https://www.pololu.com/docs/0J19/3 for more info
+  long numerator = (0*leftQti) + (1000*centerQti) + (2000*rightQti); 
+  long denominator = (leftQti) + (centerQti) + (rightQti);
+  long error = numerator / denominator;
+  int err= error;
+  
+  return err; 
+}
 
 
 /****************************************************************
@@ -263,3 +294,9 @@ long ReadSonarInches( int pin )
   }
   return duration/74/2;
 }
+
+
+/***************************************************************************
+
+ 
+ */
