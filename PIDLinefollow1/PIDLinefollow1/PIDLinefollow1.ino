@@ -60,7 +60,7 @@ const char colon2[]="\n";
 
 
 //---------------Constans for PID ------------------//
-#define KP 0.008 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
+#define KP 0.08 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
 #define KD 5 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
 #define KI 5 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Ki)
 
@@ -142,10 +142,31 @@ void loop() {
 
       int leftMotorSpeed = CCWSSlow + motorSpeed;
       int rightMotorSpeed = CWSSlow + motorSpeed;    
+
+      //This block to ensure that speed doesn't go below or above the low
+      //and high speed 
+      if(rightMotorSpeed>=90)
+      {
+        rightMotorSpeed = 89;
+      }
+      if(rightMotorSpeed<0)
+      {
+        rightMotorSpeed=0;
+      }
+      if(leftMotorSpeed<=90)
+      {
+        leftMotorSpeed = 91;
+      }
+      if(leftMotorSpeed>180)
+      {
+        leftMotorSpeed=180;
+      }
+      
        
       //Set motor speeds using the two motor speed variables above
       leftservo.write(leftMotorSpeed); 
       rightservo.write(rightMotorSpeed);
+      radio.write(&msg,sizeof(msg));
       
 }
 
