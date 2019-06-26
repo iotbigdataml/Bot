@@ -61,8 +61,8 @@ const char colon2[]="\n";
 
 //---------------Constans for PID ------------------//
 #define KP 0.005 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
-#define KD 5 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
-#define KI 5 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Ki)
+#define KD 0.009 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
+#define KI 0.00005 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Ki)
 
 //------------------------------------------------//
 
@@ -100,6 +100,9 @@ void setup() {
 }
 
 void loop() {
+
+    static int errorsum;
+    static int lasterror;
      // Read the QTI sensors
     leftQti = ReadQTI(LeftQTIPin);
     centerQti = ReadQTI(CenterQTIPin);
@@ -132,13 +135,16 @@ void loop() {
 
       int position = FindPosition(leftQti,centerQti,rightQti);
       int error = position - 1000;
+
+      //Integral part. Value of KI is defined above
+//      errorsum+=error;
       
 //      this is the D part of PID, we will do that later. 
 //      int motorSpeed = KP * error + KD * (error - lastError);
-//      lastError = error;
+      lasterror = error;
 
       //The motorspeed 
-      int motorSpeed = KP * error ;
+      int motorSpeed = KP * error + KD * (error - lasterror) ;  
 
       int leftMotorSpeed = CCWSSlow + motorSpeed;
       int rightMotorSpeed = CWSSlow + motorSpeed;    
