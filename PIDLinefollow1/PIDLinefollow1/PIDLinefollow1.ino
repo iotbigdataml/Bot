@@ -60,7 +60,7 @@ const char colon2[]="\n";
 
 
 //---------------Constans for PID ------------------//
-#define KP 0.08 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
+#define KP 0.005 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
 #define KD 5 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
 #define KI 5 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Ki)
 
