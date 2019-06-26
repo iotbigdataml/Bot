@@ -20,11 +20,11 @@
 #define CCWSFull 105      // PWM value for counter clockwise servo motion - High Speed 
 #define CWSMid 83         // PWM value for clockwise servo motion - Mid Speed
 #define CCWSMid 97      // PWM value for counter clockwise servo motion - Mid Speed
-#define CWSSlow 89        // PWM value for clockwise servo motion - Slow Speed
-#define CCWSSlow 91       // PWM value for counter clockwise servo motion - Slow Speed
+#define CWSSlow 83        // PWM value for clockwise servo motion - Slow Speed
+#define CCWSSlow 97       // PWM value for counter clockwise servo motion - Slow Speed
 //-------------------------------------------------------------------------------------//
 
-//----Thresholds for QTI----//
+//----Thresholds for QTI for bang bang----//
 #define Cthreshold 110  
 #define Rthreshold 125  
 #define Lthreshold 100  
