@@ -20,8 +20,8 @@
 #define CCWSFull 105      // PWM value for counter clockwise servo motion - High Speed 
 #define CWSMid 83         // PWM value for clockwise servo motion - Mid Speed
 #define CCWSMid 97      // PWM value for counter clockwise servo motion - Mid Speed
-#define CWSSlow 83        // PWM value for clockwise servo motion - Slow Speed
-#define CCWSSlow 97       // PWM value for counter clockwise servo motion - Slow Speed
+#define CWSSlow 75        // PWM value for clockwise servo motion - Slow Speed
+#define CCWSSlow 105       // PWM value for counter clockwise servo motion - Slow Speed
 //-------------------------------------------------------------------------------------//
 
 //----Thresholds for QTI for bang bang----//
@@ -60,8 +60,8 @@ const char colon2[]="\n";
 
 
 //---------------Constans for PID ------------------//
-#define KP 0.005 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
-#define KD 0.009 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
+#define KP 0.015 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
+#define KD 0.03 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
 #define KI 0.00005 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Ki)
 
 //------------------------------------------------//
