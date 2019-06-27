@@ -61,7 +61,7 @@ const char colon2[]="\n";
 
 //---------------Constans for PID ------------------//
 #define KP 0.015 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
-#define KD 0.03 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
+#define KD 0.09 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
 #define KI 0.00005 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Ki)
 
 //------------------------------------------------//
@@ -202,7 +202,7 @@ int FindPosition(long leftQti, long centerQti, long rightQti)
 
 //This is inspired from the QTR sensor's package of linefollow demo
 // Please refer to https://www.pololu.com/docs/0J19/3 for more info
-  long numerator = (0*leftQti) + (1000*centerQti) + (2000*rightQti); 
+  long numerator = (-50*leftQti) + (1000*centerQti) + (2000*rightQti); 
   long denominator = (leftQti) + (centerQti) + (rightQti);
   long error = numerator / denominator;
   int err= error;

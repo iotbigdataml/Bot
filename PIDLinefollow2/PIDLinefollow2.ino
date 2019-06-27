@@ -16,18 +16,18 @@
 
 
 //------------------------------ Parallax Servos---------------------------------------//
-#define CWSFull 75         // PWM value for clockwise servo motion - High Speed 
-#define CCWSFull 105      // PWM value for counter clockwise servo motion - High Speed 
-#define CWSMid 83         // PWM value for clockwise servo motion - Mid Speed
-#define CCWSMid 97      // PWM value for counter clockwise servo motion - Mid Speed
-#define CWSSlow 75        // PWM value for clockwise servo motion - Slow Speed
-#define CCWSSlow 105       // PWM value for counter clockwise servo motion - Slow Speed
+#define CWSFull 0         // PWM value for clockwise servo motion - High Speed 
+#define CCWSFull 180      // PWM value for counter clockwise servo motion - High Speed 
+#define CWSMid 35         // PWM value for clockwise servo motion - Mid Speed
+#define CCWSMid 145      // PWM value for counter clockwise servo motion - Mid Speed
+#define CWSSlow 0        // PWM value for clockwise servo motion - Slow Speed
+#define CCWSSlow 180       // PWM value for counter clockwise servo motion - Slow Speed
 //-------------------------------------------------------------------------------------//
 
 //----Thresholds for QTI for bang bang----//
-#define Cthreshold 110  
-#define Rthreshold 125  
-#define Lthreshold 100  
+#define Cthreshold 70  
+#define Rthreshold 70  
+#define Lthreshold 40  
 #define servoHalt 90
 //-------------------------//
 
@@ -60,8 +60,8 @@ const char colon2[]="\n";
 
 
 //---------------Constans for PID ------------------//
-#define KP 0.015 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
-#define KD 0.03 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
+#define KP 0.094 //experiment to determine this, start by something small that just makes your bot follow the line at a slow speed
+#define KD 0.9 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Kd) 
 #define KI 0.00005 //experiment to determine this, slowly increase the speeds and adjust this value. ( Note: Kp < Ki)
 
 //------------------------------------------------//
