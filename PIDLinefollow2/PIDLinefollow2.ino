@@ -41,7 +41,7 @@ int rightQti;             // Right IR sensor value
 Servo leftservo;          // Left servo object
 Servo rightservo;         // Right servo object
 RF24 radio(7, 8);                 // Chip enable (7), Chip Select (8)
-const byte address[6] = "01011";  // Radio address - use only the channels 
+const byte address[6] = "01100";  // Radio address - use only the channels 
                                   //that match the numbers on your robots
 //------------------------------------------------------------------------//
 
