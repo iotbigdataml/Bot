@@ -202,7 +202,7 @@ int FindPosition(long leftQti, long centerQti, long rightQti)
 
 //This is inspired from the QTR sensor's package of linefollow demo
 // Please refer to https://www.pololu.com/docs/0J19/3 for more info
-  long numerator = (0*leftQti) + (1000*centerQti) + (2000*rightQti); 
+  long numerator = (-30*leftQti) + (1000*centerQti) + (2000*rightQti); 
   long denominator = (leftQti) + (centerQti) + (rightQti);
   long error = numerator / denominator;
   int err= error;
