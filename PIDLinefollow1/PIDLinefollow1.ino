@@ -90,9 +90,9 @@ void setup() {
   }
 
   //Opening radio pipe 
-  radio.openWritingPipe(address);  // Open the radio pipe using your address (read about pipes and channels)
-  radio.setPALevel(RF24_PA_MIN);   // Set the power level. Since the bots and the radio base station are close I use min power
-  radio.stopListening();           // Now we listen for messages...
+  radio.openReadingPipe(0,address);   // Open the radio pipe using your address (read about pipes and channels)
+  radio.setPALevel(RF24_PA_MIN);      // Set the power level. Since the bots and the radio base station are close I use min power
+  radio.startListening();             // Now we listen for messages...
   Serial.println("Radio Ready...");
 
   delay(1000);
@@ -103,6 +103,8 @@ void loop() {
 
     static int errorsum;
     static int lasterror;
+    static int shiprec;
+
      // Read the QTI sensors
     leftQti = ReadQTI(LeftQTIPin);
     centerQti = ReadQTI(CenterQTIPin);
@@ -120,6 +122,30 @@ void loop() {
     strcat(msg,rqt);  
     strcat(msg,colon2);
 
+    //This block checks if there is any message in the pipe 
+    //if the message reads 'm', the put the bot in maintenance mode
+    //make it wait untill it receives a 'n' message. 
+    if (radio.available())              
+    {
+      char text[32] = "";
+      radio.read(&text, sizeof(text));
+      if(!strcmp(text,"m"))
+      {
+        Serial.print(text);
+        leftservo.write(servoHalt);
+        rightservo.write(servoHalt);
+        while(1)
+        {
+           char text[32] = "";
+           radio.read(&text, sizeof(text));
+           if(!strcmp(text,"n"))
+           {
+              break;
+           }
+         }
+      }
+    }
+
 
     // In this section we check the values of the Sonar and the QTI pins
     // and figure out what to do. Some obstacle is in front of the robot 
@@ -129,8 +155,83 @@ void loop() {
       Serial.print("Obstacle!");
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);
-      radio.write(&msg,sizeof(msg));  
+//      radio.write(&msg,sizeof(msg)); 
+      delay(5000); 
 
+    }
+    
+    //This block is when the bot reaches shipping. It stops and waits for a 
+    //message to start moving ahead. It can also be put into maintenance mode
+     else if( leftQti > 700 && centerQti >700 && rightQti >700 && shiprec!=1)
+    {
+      Serial.print("Shipping !");
+      leftservo.write(ServoStop); 
+      rightservo.write(ServoStop);      
+      delay(2000);
+      while(1)
+      {
+        char text1[32] = "";
+        radio.read(&text1, sizeof(text1));
+        if(!strcmp(text1,"m"))
+        {
+          leftservo.write(servoHalt);
+        rightservo.write(servoHalt);
+        while(1)
+        {
+           char text[32] = "";
+           radio.read(&text, sizeof(text));
+           if(!strcmp(text,"n"))
+           {
+              break;
+           }
+         }
+        }
+        else if(!strcmp(text1,"q"))
+        {
+          leftservo.write(CCWSMid); 
+          rightservo.write(CWSMid);
+          delay(500);
+          break;
+        }
+      }
+      shiprec=1;
+      
+    }
+     //This block is when the bot reaches receiving. It stops and waits for a 
+    //message to start moving ahead. It can also be put into maintenance mode
+    else if( leftQti < 100 && centerQti >700 && rightQti >700 && shiprec!=2)
+    {
+      Serial.print("Receiving  !");
+      leftservo.write(ServoStop); 
+      rightservo.write(ServoStop);
+      delay(2000);
+      while(1)
+      {
+        char text2[32] = "";
+        radio.read(&text2, sizeof(text2));
+        if(!strcmp(text2,"m"))
+        {
+          leftservo.write(servoHalt);
+          rightservo.write(servoHalt);
+          while(1)
+          {
+            char text[32] = "";
+            radio.read(&text, sizeof(text));
+            if(!strcmp(text,"n"))
+            {
+              break;
+            }
+          }
+        }
+        else if(!strcmp(text2,"q"))
+        {
+          leftservo.write(CCWSMid); 
+          rightservo.write(CWSMid);
+          delay(500);
+          break;
+        }
+      }  
+      shiprec=2;
     }
     else
     {
@@ -139,10 +240,10 @@ void loop() {
       int error = position - 1000;
 
       //Integral part. Value of KI is defined above
-//      errorsum+=error;
+      //errorsum+=error;
       
-//      this is the D part of PID, we will do that later. 
-//      int motorSpeed = KP * error + KD * (error - lastError);
+      //this is the D part of PID, we will do that later. 
+      //int motorSpeed = KP * error + KD * (error - lastError);
       lasterror = error;
 
       //The motorspeed 
@@ -174,7 +275,7 @@ void loop() {
       //Set motor speeds using the two motor speed variables above
       leftservo.write(leftMotorSpeed); 
       rightservo.write(rightMotorSpeed);
-      radio.write(&msg,sizeof(msg));
+//      radio.write(&msg,sizeof(msg));
     }
       
 }
