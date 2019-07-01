@@ -47,8 +47,8 @@ const byte address[6] = "01011";  // Radio address - use only the channels
 
 
 //---characters for sending messages back---//
-const char receiving[]="receiving";
-const char shipping[]="shipping";
+const char receiving[]="receiving1";
+const char shipping[]="shipping1";
 const char obstacle[]="obstacle";
 char lqt[16];
 char cqt[16];
@@ -90,6 +90,7 @@ void setup() {
   }
 
   //Opening radio pipe 
+  radio.openWritingPipe(address);
   radio.openReadingPipe(0,address);   // Open the radio pipe using your address (read about pipes and channels)
   radio.setPALevel(RF24_PA_MIN);      // Set the power level. Since the bots and the radio base station are close I use min power
   radio.startListening();             // Now we listen for messages...
@@ -167,7 +168,11 @@ void loop() {
       Serial.print("Shipping !");
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);      
-      delay(2000);
+      delay(1000);
+      radio.stopListening();
+      radio.write(&shipping,sizeof(shipping));  
+      radio.startListening();
+      delay(1000);
       while(1)
       {
         char text1[32] = "";
@@ -204,7 +209,11 @@ void loop() {
       Serial.print("Receiving  !");
       leftservo.write(ServoStop); 
       rightservo.write(ServoStop);
-      delay(2000);
+      delay(1000);
+      radio.stopListening();
+      radio.write(&receiving,sizeof(receiving));  
+      radio.startListening();
+      delay(1000);
       while(1)
       {
         char text2[32] = "";
