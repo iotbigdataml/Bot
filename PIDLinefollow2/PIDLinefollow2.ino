@@ -43,6 +43,8 @@ Servo rightservo;         // Right servo object
 RF24 radio(7, 8);                 // Chip enable (7), Chip Select (8)
 const byte address[6] = "01100";  // Radio address - use only the channels 
                                   //that match the numbers on your robots
+const byte address_common[6] = "01011";
+
 //------------------------------------------------------------------------//
 
 
@@ -90,7 +92,7 @@ void setup() {
   }
 
   //Opening radio pipe 
-  radio.openWritingPipe(address);
+  radio.openWritingPipe(address_common);
   radio.openReadingPipe(0,address);   // Open the radio pipe using your address (read about pipes and channels)
   radio.setPALevel(RF24_PA_MIN);      // Set the power level. Since the bots and the radio base station are close I use min power
   radio.startListening();             // Now we listen for messages...
